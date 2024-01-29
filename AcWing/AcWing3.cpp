@@ -21,3 +21,8 @@ int main() {
     printf("%d", f[m]);
     return 0;
 }
+
+/**
+ * 01背包：f[i][j] = max(f[i - 1][j], f[i - 1][j - v] + w);
+ * 完全背包：f[i][j] = max(f[i - 1][j], f[i][j - v] + w);
+ */
