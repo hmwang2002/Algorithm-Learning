@@ -5,33 +5,29 @@ using namespace std;
 class Solution
 {
 public:
-    bool isValidSudoku(vector<vector<char>> &board)
-    {
-        int rows[9][9];
-        int cols[9][9];
-        int subboxes[3][3][9];
+    vector<vector<int>> res;
+    vector<int> v;
 
-        memset(rows, 0, sizeof rows);
-        memset(cols, 0, sizeof cols);
-        memset(subboxes, 0, sizeof subboxes);
-        for (int i = 0; i < 9; i++)
+    void backtrace(vector<int> &candidates, int target, int index, int sum)
+    {
+        if (sum == target)
         {
-            for (int j = 0; j < 9; j++)
-            {
-                char c = board[i][j];
-                if (c != '.')
-                {
-                    int index = c - '1';
-                    rows[i][index]++;
-                    cols[j][index]++;
-                    subboxes[i / 3][j / 3][index]++;
-                    if (rows[i][index] > 1 || cols[j][index] > 1 || subboxes[i / 3][j / 3][index] > 1)
-                    {
-                        return false;
-                    }
-                }
-            }
+            res.push_back(v);
+            return;
         }
-        return true;
+        if (sum > target)
+            return;
+        for (int i = index; i < candidates.size(); i++)
+        {
+            v.push_back(candidates[i]);
+            backtrace(candidates, target, i, sum + candidates[i]);
+            v.pop_back();
+        }
+    }
+
+    vector<vector<int>> combinationSum(vector<int> &candidates, int target)
+    {
+        backtrace(candidates, target, 0, 0);
+        return res;
     }
 };
