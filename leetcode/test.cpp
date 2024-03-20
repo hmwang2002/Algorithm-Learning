@@ -2,41 +2,93 @@
 
 using namespace std;
 
-class Solution
+struct DLinkedNode
 {
+    int key, val;
+    DLinkedNode *pre;
+    DLinkedNode *next;
+    DLinkedNode() : key(0), val(0), pre(nullptr), next(nullptr) {}
+    DLinkedNode(int k, int v) : key(k), val(v), pre(nullptr), next(nullptr) {}
+};
+
+class LRUCache
+{
+    int size, capacity;
+    DLinkedNode *head, *tail;
+    unordered_map<int, DLinkedNode *> mp;
+
 public:
-    vector<vector<int>> threeSum(vector<int> &nums)
+    LRUCache(int capacity)
     {
-        sort(nums.begin(), nums.end());
-        vector<vector<int>> res;
-        for (int i = 0; i < nums.size() - 2; i++)
+        this->size = 0;
+        this->capacity = capacity;
+        head = new DLinkedNode();
+        tail = new DLinkedNode();
+        head->next = tail, tail->pre = head;
+    }
+
+    int get(int key)
+    {
+        if (!mp.count(key))
         {
-            if (i > 0 && nums[i] == nums[i - 1])
-            {
-                continue;
-            }
-            int l = i + 1;
-            int r = nums.size() - 1;
-            int target = -nums[i];
-            while (l < r)
-            {
-                int cur = nums[l] + nums[r];
-                if (cur == target)
-                {
-                    res.push_back({nums[i], nums[l], nums[r]});
-                    while (l < r && nums[l++] == nums[l])
-                        ;
-                }
-                else if (cur < target)
-                {
-                    l++;
-                }
-                else
-                {
-                    r--;
-                }
+            return -1;
+        }
+        DLinkedNode *node = mp[key];
+        moveToHead(node);
+        return node->val;
+    }
+
+    void put(int key, int value)
+    {
+        if(mp.count(key)) {
+            DLinkedNode *node = mp[key];
+            node->val = value;
+            moveToHead(node);
+        } else {
+            DLinkedNode *node = new DLinkedNode(key, value);
+            mp[key] = node;
+            addToHead(node);
+            size++;
+            if(size > capacity) {
+                DLinkedNode *removed = removeTail();
+                size--;
+                mp.erase(removed->key);
+                delete removed;
             }
         }
-        return res;
+    }
+
+    void removeNode(DLinkedNode *node)
+    {
+        node->pre->next = node->next;
+        node->next->pre = node->pre;
+    }
+
+    void addToHead(DLinkedNode *node)
+    {
+        node->next = head->next;
+        head->next->pre = node;
+        node->pre = head;
+        head->next = node;
+    }
+
+    void moveToHead(DLinkedNode *node)
+    {
+        removeNode(node);
+        addToHead(node);
+    }
+
+    DLinkedNode *removeTail()
+    {
+        DLinkedNode *node = tail->pre;
+        removeNode(node);
+        return node;
     }
 };
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */

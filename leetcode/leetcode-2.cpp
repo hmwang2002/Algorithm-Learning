@@ -8,50 +8,36 @@ struct ListNode
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
-class Solution {
+class Solution
+{
 public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* p1 = l1;
-        ListNode* p2 = l2;
-        ListNode* dummy = new ListNode();
-        ListNode* res = dummy;
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
+    {
+        ListNode *p1 = l1;
+        ListNode *p2 = l2;
+        ListNode *dummy = new ListNode();
+        ListNode *res = dummy;
         int add = 0;
-        while (p1 && p2)
+        while (p1 || p2)
         {
-            res->next = new ListNode(p1->val + p2->val + add);
-            add = 0;
-            if (res->next->val >= 10) {
-                res->next->val -= 10;
-                add = 1;
-            }
+            int v1 = p1 == nullptr ? 0 : p1->val;
+            int v2 = p2 == nullptr ? 0 : p2->val;
+            int sum = v1 + v2 + add;
+            add = sum / 10;
+            sum = sum % 10;
+            res->next = new ListNode(sum);
             res = res->next;
-            p1 = p1->next;
-            p2 = p2->next;
-        }
-        while(p1) {
-            res->next = new ListNode(p1->val + add);
-            add = 0;
-            if (res->next->val >= 10)
+            if (p1)
             {
-                res->next->val -= 10;
-                add++;
+                p1 = p1->next;
             }
-            
-            res = res->next;
-            p1 = p1->next;
-        }
-        while(p2) {
-            res->next = new ListNode(p2->val + add);
-            add = 0;
-            if (res->next->val >= 10)
+            if (p2)
             {
-                res->next->val -= 10;
-                add++;
+                p2 = p2->next;
             }
-            res = res->next;
-            p2 = p2->next;
         }
-        if (add > 0) {
+        if (add > 0)
+        {
             res->next = new ListNode(add);
         }
         return dummy->next;
