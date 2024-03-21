@@ -2,93 +2,31 @@
 
 using namespace std;
 
-struct DLinkedNode
+class Solution
 {
-    int key, val;
-    DLinkedNode *pre;
-    DLinkedNode *next;
-    DLinkedNode() : key(0), val(0), pre(nullptr), next(nullptr) {}
-    DLinkedNode(int k, int v) : key(k), val(v), pre(nullptr), next(nullptr) {}
-};
-
-class LRUCache
-{
-    int size, capacity;
-    DLinkedNode *head, *tail;
-    unordered_map<int, DLinkedNode *> mp;
-
 public:
-    LRUCache(int capacity)
+    vector<int> maxSlidingWindow(vector<int> &nums, int k)
     {
-        this->size = 0;
-        this->capacity = capacity;
-        head = new DLinkedNode();
-        tail = new DLinkedNode();
-        head->next = tail, tail->pre = head;
-    }
-
-    int get(int key)
-    {
-        if (!mp.count(key))
+        int n = nums.size();
+        deque<int> dq;
+        vector<int> res(n - k + 1);
+        int j = 0;
+        for (int i = 0; i < n; i++)
         {
-            return -1;
-        }
-        DLinkedNode *node = mp[key];
-        moveToHead(node);
-        return node->val;
-    }
-
-    void put(int key, int value)
-    {
-        if(mp.count(key)) {
-            DLinkedNode *node = mp[key];
-            node->val = value;
-            moveToHead(node);
-        } else {
-            DLinkedNode *node = new DLinkedNode(key, value);
-            mp[key] = node;
-            addToHead(node);
-            size++;
-            if(size > capacity) {
-                DLinkedNode *removed = removeTail();
-                size--;
-                mp.erase(removed->key);
-                delete removed;
+            while (!dq.empty() && i - k + 1 > dq.front())
+            {
+                dq.pop_front();
+            }
+            while (!dq.empty() && nums[dq.back()] <= nums[i])
+            {
+                dq.pop_back();
+            }
+            dq.push_back(i);
+            if (i >= k - 1)
+            {
+                res[j++] = nums[dq.front()];
             }
         }
-    }
-
-    void removeNode(DLinkedNode *node)
-    {
-        node->pre->next = node->next;
-        node->next->pre = node->pre;
-    }
-
-    void addToHead(DLinkedNode *node)
-    {
-        node->next = head->next;
-        head->next->pre = node;
-        node->pre = head;
-        head->next = node;
-    }
-
-    void moveToHead(DLinkedNode *node)
-    {
-        removeNode(node);
-        addToHead(node);
-    }
-
-    DLinkedNode *removeTail()
-    {
-        DLinkedNode *node = tail->pre;
-        removeNode(node);
-        return node;
+        return res;
     }
 };
-
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache* obj = new LRUCache(capacity);
- * int param_1 = obj->get(key);
- * obj->put(key,value);
- */
