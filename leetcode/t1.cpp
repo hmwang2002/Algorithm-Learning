@@ -6,23 +6,44 @@ using namespace std;
 class Solution
 {
 public:
-    ListNode *reverseBetween(ListNode *head, int left, int right)
+    ListNode *mergeTwoLists(ListNode *a, ListNode *b)
     {
-        ListNode *dummy = new ListNode(-1, head);
-        ListNode *pre = dummy;
-        for (int i = 0; i < left - 1; i++)
+        if (a == nullptr || b == nullptr)
+            return a ? a : b;
+        ListNode *head = new ListNode(-1), *p1 = a, *p2 = b;
+        ListNode *p = head;
+        while (p1 && p2)
         {
-            pre = pre->next;
+            if (p1->val < p2->val)
+            {
+                p->next = p1;
+                p1 = p1->next;
+            }
+            else
+            {
+                p->next = p2;
+                p2 = p2->next;
+            }
+            p = p->next;
         }
-        ListNode *cur = pre->next;
-        ListNode *nxt = pre->next;
-        for (int i = left; i < right; i++)
+        p->next = p1 ? p1 : p2;
+        return head->next;
+    }
+
+    ListNode *merge(vector<ListNode *> &lists, int l, int r)
+    {
+        if (l == r)
         {
-            nxt = cur->next;
-            cur->next = nxt->next;
-            nxt->next = pre->next;
-            pre->next = nxt;
+            return lists[l];
         }
-        return dummy->next;
+        if (l > r)
+            return nullptr;
+        int mid = (l + r) >> 1;
+        return mergeTwoLists(merge(lists, l, mid), merge(lists, mid + 1, r));
+    }
+
+    ListNode *mergeKLists(vector<ListNode *> &lists)
+    {
+        return merge(lists, 0, lists.size() - 1);
     }
 };
