@@ -3,47 +3,55 @@
 
 using namespace std;
 
-class Solution
+class Trie
 {
+    vector<Trie *> children;
+    bool isEnd;
+
 public:
-    ListNode *mergeTwoLists(ListNode *a, ListNode *b)
+    Trie()
     {
-        if (a == nullptr || b == nullptr)
-            return a ? a : b;
-        ListNode *head = new ListNode(-1), *p1 = a, *p2 = b;
-        ListNode *p = head;
-        while (p1 && p2)
-        {
-            if (p1->val < p2->val)
-            {
-                p->next = p1;
-                p1 = p1->next;
-            }
-            else
-            {
-                p->next = p2;
-                p2 = p2->next;
-            }
-            p = p->next;
-        }
-        p->next = p1 ? p1 : p2;
-        return head->next;
+        children = vector<Trie *>(26);
+        isEnd = false;
     }
 
-    ListNode *merge(vector<ListNode *> &lists, int l, int r)
+    void insert(string word)
     {
-        if (l == r)
+        Trie *node = this;
+        for (char &c : word)
         {
-            return lists[l];
+            int index = c - 'a';
+            if (node->children[index] == nullptr)
+            {
+                node->children[index] = new Trie();
+            }
+            node = node->children[index];
         }
-        if (l > r)
-            return nullptr;
-        int mid = (l + r) >> 1;
-        return mergeTwoLists(merge(lists, l, mid), merge(lists, mid + 1, r));
+        node->isEnd = true;
     }
 
-    ListNode *mergeKLists(vector<ListNode *> &lists)
+    bool search(string word)
     {
-        return merge(lists, 0, lists.size() - 1);
+        Trie *node = this;
+        for(char &c : word) {
+            int index = c - 'a';
+            if(node->children[index] == nullptr)
+                return false;
+            node = node->children[index];
+        }
+        return node->isEnd;
+    }
+
+    bool startsWith(string prefix)
+    {
+        Trie *node = this;
+        for (char &c : prefix)
+        {
+            int index = c - 'a';
+            if (node->children[index] == nullptr)
+                return false;
+            node = node->children[index];
+        }
+        return true;
     }
 };
