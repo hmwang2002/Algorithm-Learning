@@ -58,24 +58,25 @@ public:
     // }
 
     // 双指针
+
     int trap(vector<int> &height)
     {
         int ans = 0;
-        int left = 0, right = height.size() - 1;
+        int l = 0, r = height.size() - 1;
         int leftMax = 0, rightMax = 0;
-        while (left < right)
+        while (l < r)
         {
-            leftMax = max(height[left], leftMax);
-            rightMax = max(height[right], rightMax);
-            if (height[left] < height[right])
+            leftMax = max(leftMax, height[l]);
+            rightMax = max(rightMax, height[r]);
+            if (leftMax < rightMax)
             {
-                ans += leftMax - height[left];
-                ++left;
+                ans += leftMax - height[l];
+                l++;
             }
             else
             {
-                ans += rightMax - height[right];
-                --right;
+                ans += rightMax - height[r];
+                r--;
             }
         }
         return ans;
