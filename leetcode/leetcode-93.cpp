@@ -9,20 +9,22 @@ public:
 
     bool isValid(string &s, int start, int end)
     {
-        if (end < start)
+        if (start > end)
             return false;
         if (s[start] == '0' && start != end)
-        {
             return false;
-        }
         int num = 0;
         for (int i = start; i <= end; i++)
         {
             if (s[i] < '0' || s[i] > '9')
+            {
                 return false;
+            }
             num = num * 10 + s[i] - '0';
             if (num > 255)
+            {
                 return false;
+            }
         }
         return true;
     }
