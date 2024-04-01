@@ -17,19 +17,28 @@ int main()
         cin >> a[i];
     }
     vector<long long> prefix(n + 1, 0);
-    for (int i = 1; i <= n; i++)
+    int x = 0;
+    for (int i = 0; i < n; i++)
     {
-        prefix[i] = prefix[i - 1] ^ a[i - 1];
+        x ^= a[i];
+        prefix[i] = x;
     }
-    for (int i = 1; i <= n; i++)
+    for (int i = 0; i < n; i++)
     {
-        for (int j = 1; j <= min(i, k); j++)
+        for (int j = 1; j <= k; j++)
         {
-            for (int l = j - 1; l < i; l++)
+            if (j == 1)
             {
-                dp[i][j] = max(dp[i][j], dp[l][j - 1] + (prefix[i] ^ prefix[l]));
+                dp[i][j] = prefix[i];
+            }
+            else
+            {
+                for (int l = 0; l < i; l++)
+                {
+                    dp[i][j] = max(dp[i][j], dp[l][j - 1] + (prefix[i] ^ prefix[l]));
+                }
             }
         }
     }
-    cout << dp[n][k];
+    cout << dp[n - 1][k];
 }
