@@ -5,48 +5,24 @@ using namespace std;
 
 class Solution
 {
-    vector<vector<int>> edges;
-    vector<int> visited;
-    bool valid = true;
+public:
+    int maxSum = INT_MIN;
 
-    void dfs(int u)
+    int maxGain(TreeNode *root)
     {
-        visited[u] = 1;
-        for (int v : edges[u])
+        if (root == nullptr)
         {
-            if (visited[v] == 0)
-            {
-                dfs(v);
-                if (!valid)
-                {
-                    return;
-                }
-            }
-            else if (visited[v] == 1)
-            {
-                valid = false;
-                return;
-            }
+            return 0;
         }
-        visited[u] = 2;
+        int l = max(maxGain(root->left), 0);
+        int r = max(maxGain(root->right), 0);
+        maxSum = max(maxSum, l + r + root->val);
+        return root->val + max(l, r);
     }
 
-public:
-    bool canFinish(int numCourses, vector<vector<int>> &prerequisites)
+    int maxPathSum(TreeNode *root)
     {
-        edges.resize(numCourses);
-        visited.resize(numCourses);
-        for (auto &info : prerequisites)
-        {
-            edges[info[1]].push_back(info[0]);
-        }
-        for (int i = 0; i < numCourses && valid; i++)
-        {
-            if (!visited[i])
-            {
-                dfs(i);
-            }
-        }
-        return valid;
+        maxGain(root);
+        return maxSum;
     }
 };
