@@ -3,55 +3,39 @@
 
 using namespace std;
 
-class Trie
+class Solution
 {
-    vector<Trie *> children;
-    bool isEnd;
-
 public:
-    Trie()
+    vector<int> searchRange(vector<int> &nums, int target)
     {
-        children = vector<Trie *>(26);
-        isEnd = false;
-    }
-
-    void insert(string word)
-    {
-        Trie *node = this;
-        for (char &c : word)
+        if (nums.size() == 0)
+            return {-1, -1};
+        vector<int> res(2);
+        int l = 0, r = nums.size() - 1;
+        while (l < r)
         {
-            int index = c - 'a';
-            if (node->children[index] == nullptr)
+            int mid = (l + r) >> 1;
+            if (nums[mid] >= target)
             {
-                node->children[index] = new Trie();
+                r = mid;
             }
-            node = node->children[index];
+            else
+            {
+                l = mid + 1;
+            }
         }
-        node->isEnd = true;
-    }
-
-    bool search(string word)
-    {
-        Trie *node = this;
-        for(char &c : word) {
-            int index = c - 'a';
-            if(node->children[index] == nullptr)
-                return false;
-            node = node->children[index];
-        }
-        return node->isEnd;
-    }
-
-    bool startsWith(string prefix)
-    {
-        Trie *node = this;
-        for (char &c : prefix)
+        if (nums[l] != target)
+            return {-1, -1};
+        res[0] = l;
+        r = l + 1;
+        while (r < nums.size())
         {
-            int index = c - 'a';
-            if (node->children[index] == nullptr)
-                return false;
-            node = node->children[index];
+            if (nums[r] == target)
+                r++;
+            else
+                break;
         }
-        return true;
+        res[1] = r - 1;
+        return res;
     }
 };
