@@ -5,23 +5,17 @@ using namespace std;
 class Solution
 {
 public:
-    bool searchMatrix(vector<vector<int>> &matrix, int target)
+    int findMin(vector<int> &nums)
     {
-        int m = matrix.size(), n = matrix[0].size();
-        int x = 0, y = n - 1;
-        while (x < m && y >= 0)
-        {
-            if (matrix[x][y] == target)
-                return true;
-            else if (matrix[x][y] > target)
-            {
-                y--;
-            }
-            else
-            {
-                x++;
+        int l = 0, r = nums.size() - 1;
+        while(l < r) {
+            int mid = (l + r) >> 1;
+            if(nums[mid] < nums[r]) {
+                r = mid;
+            } else {
+                l = mid + 1;
             }
         }
-        return false;
+        return nums[l];
     }
 };
