@@ -48,8 +48,7 @@ public:
         {
             if (isalpha(s[index]))
             {
-                string s1 = getStr(s);
-                stk.push(s1);
+                stk.push(getStr(s));
             }
             else if (isdigit(s[index]))
             {
@@ -63,16 +62,22 @@ public:
             {
                 string s1 = stk.top();
                 stk.pop();
-                string numstr = stk.top();
-                int num = 1;
-                if (isdigit(numstr[0]))
+                while (!isdigit(stk.top()[0]))
                 {
+                    s1 = stk.top() + s1;
                     stk.pop();
-                    num = cal(numstr);
                 }
-                string pre = stk.top();
+                string numstr = stk.top();
                 stk.pop();
-                for (int i = 0; i < num; i++) {
+                int num = cal(numstr);
+                string pre = "";
+                if (!isdigit(stk.top()[0]))
+                {
+                    pre = stk.top();
+                    stk.pop();
+                }
+                for (int i = 0; i < num; i++)
+                {
                     pre += s1;
                 }
                 stk.push(pre);
@@ -92,7 +97,8 @@ public:
     }
 };
 
-int main() {
+int main()
+{
     Solution s;
     string str = "3[z]2[2[y]pq4[2[jk]e1[f]]]ef";
     string res = s.decodeString(str);
