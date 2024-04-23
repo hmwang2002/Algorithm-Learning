@@ -6,16 +6,44 @@ using namespace std;
 class Solution
 {
 public:
-    int trap(vector<int> &height)
+    ListNode *reverse(ListNode *head)
     {
-        int n = height.size();
-        int ans = 0, l = 0, r = n - 1, pre_max = 0, suf_max = 0;
-        while (l < r)
+        ListNode *pre = new ListNode(-1, head);
+        ListNode *cur = head;
+        while (cur->next)
         {
-            pre_max = max(pre_max, height[l]);
-            suf_max = max(suf_max, height[r]);
-            ans += pre_max < suf_max ? pre_max - height[l++] : suf_max - height[r--];
+            ListNode *nxt = cur->next;
+            cur->next = nxt->next;
+            nxt->next = pre->next;
+            pre->next = nxt;
         }
-        return ans;
+        return pre->next;
+    }
+
+    bool isPalindrome(ListNode *head)
+    {
+        if (!head || !head->next)
+            return true;
+        ListNode *slow = head, *fast = head;
+        while (fast != nullptr && fast->next != nullptr)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        if (fast)
+            slow = slow->next;
+        slow = reverse(slow);
+        ListNode *p = head;
+        while (slow != nullptr)
+        {
+            if (p->val == slow->val)
+            {
+                p = p->next;
+                slow = slow->next;
+            }
+            else
+                return false;
+        }
+        return true;
     }
 };
