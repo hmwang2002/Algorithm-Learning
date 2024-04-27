@@ -3,46 +3,30 @@
 
 using namespace std;
 
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
 class Solution
 {
 public:
-    ListNode *reverse(ListNode *pre, ListNode *tail)
+    vector<int> maxSlidingWindow(vector<int> &nums, int k)
     {
-        ListNode *cur = pre->next, *nxt = pre->next;
-        while (cur->next != tail)
+        int n = nums.size(), j = 0;
+        deque<int> dq;
+        vector<int> res(n - k + 1);
+        for (int i = 0; i < n; i++)
         {
-            nxt = cur->next;
-            cur->next = nxt->next;
-            nxt->next = pre->next;
-            pre->next = nxt;
-        }
-        return cur;
-    }
-
-    ListNode *reverseKGroup(ListNode *head, int k)
-    {
-        ListNode *dummy = new ListNode(-1, head);
-        ListNode *tail = head, *pre = dummy;
-        while (tail != nullptr)
-        {
-            for (int i = 0; i < k; i++)
+            while (!dq.empty() && i - k + 1 > dq.front())
             {
-                if (tail == nullptr)
-                    return dummy->next;
-                tail = tail->next;
+                dq.pop_front();
             }
-            pre = reverse(pre, tail);
+            while (!dq.empty() && nums[i] >= nums[dq.back()])
+            {
+                dq.pop_back();
+            }
+            dq.push_back(i);
+            if (i >= k - 1)
+            {
+                res[j++] = nums[dq.front()];
+            }
         }
-        return dummy->next;
+        return res;
     }
 };
