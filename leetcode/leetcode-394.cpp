@@ -5,102 +5,38 @@ using namespace std;
 class Solution
 {
 public:
-    int index = 0;
-
-    string getDigit(string &s)
-    {
-        string res = "";
-        while (index < s.size() && isdigit(s[index]))
-        {
-            res += s[index];
-            index++;
-        }
-        return res;
-    }
-
-    string getStr(string &s)
-    {
-        string res = "";
-        while (index < s.size() && isalpha(s[index]))
-        {
-            res += s[index];
-            index++;
-        }
-        return res;
-    }
-
-    int cal(string &digits)
-    {
-        int res = 0;
-        for (int i = 0; i < digits.size(); i++)
-        {
-            res = res * 10 + (digits[i] - '0');
-        }
-        return res;
-    }
-
     string decodeString(string s)
     {
-        stack<string> stk;
-        stk.push("");
-        index = 0;
-        while (index < s.size())
+        string res;
+        int n;
+        stack<pair<int, string>> stk;
+        for (char c : s)
         {
-            if (isalpha(s[index]))
+            if (c == '[')
             {
-                stk.push(getStr(s));
+                stk.emplace(n, res);
+                res = "";
+                n = 0;
             }
-            else if (isdigit(s[index]))
+            else if (c == ']')
             {
-                stk.push(getDigit(s));
+                string tmp = "";
+                for (int i = 0; i < stk.top().first; i++)
+                {
+                    tmp += res;
+                }
+                res = stk.top().second + tmp;
+                stk.pop();
             }
-            else if (s[index] == '[')
+            else if (c >= '0' && c <= '9')
             {
-                index++;
+                n = n * 10 + c - '0';
             }
             else
             {
-                string s1 = stk.top();
-                stk.pop();
-                while (!isdigit(stk.top()[0]))
-                {
-                    s1 = stk.top() + s1;
-                    stk.pop();
-                }
-                string numstr = stk.top();
-                stk.pop();
-                int num = cal(numstr);
-                string pre = "";
-                if (!isdigit(stk.top()[0]))
-                {
-                    pre = stk.top();
-                    stk.pop();
-                }
-                for (int i = 0; i < num; i++)
-                {
-                    pre += s1;
-                }
-                stk.push(pre);
-                index++;
+                res += c;
             }
-        }
-        string res = stk.top();
-        stk.pop();
-        while (!stk.empty())
-        {
-            string pre = stk.top();
-            stk.pop();
-            pre += res;
-            res = pre;
         }
         return res;
     }
 };
-
-int main()
-{
-    Solution s;
-    string str = "3[z]2[2[y]pq4[2[jk]e1[f]]]ef";
-    string res = s.decodeString(str);
-    cout << res << endl;
-}
