@@ -2,26 +2,36 @@
 
 using namespace std;
 
+auto _{
+    []() noexcept
+    {
+        std::ios::sync_with_stdio(false);
+        std::cin.tie(nullptr), std::cout.tie(nullptr);
+        return 0;
+    }()};
+
 class Solution
 {
 public:
-    int maximumCostSubstring(string s, string chars, vector<int> &vals)
+    vector<long long> minOperations(vector<int> &nums, vector<int> &queries)
     {
-        unordered_map<char, int> mp;
-        for (int i = 0; i < 26; i++)
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        long long sum[n + 1];
+        sum[0] = 0;
+        for (int i = 0; i < n; i++)
         {
-            mp[i] = i + 1;
+            sum[i + 1] = sum[i] + nums[i];
         }
-        for (int i = 0; i < chars.length(); i++)
+        int m = queries.size();
+        vector<long long> ans(m);
+        for (int i = 0; i < m; i++)
         {
-            mp[chars[i] - 'a'] = vals[i];
-        }
-        int ans = 0;
-        int f = 0;
-        for (int i = 0; i < s.length(); i++)
-        {
-            f = max(0, f) + mp[s[i] - 'a'];
-            ans = max(ans, f);
+            int q = queries[i];
+            long long j = lower_bound(nums.begin(), nums.end(), q) - nums.begin();
+            long long left = q * j - sum[j];
+            long long right = sum[n] - sum[j] - q * (n - j);
+            ans[i] = left + right;
         }
         return ans;
     }
