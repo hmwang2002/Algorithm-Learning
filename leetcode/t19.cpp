@@ -11,41 +11,30 @@ auto _{
         return 0;
     }()};
 
-using pii = pair<int, int>;
-
 class Solution
 {
 public:
-    int networkDelayTime(vector<vector<int>> &times, int n, int k)
+    int cnt = 0;
+
+    void dfs(TreeNode *root, long cur, int targetSum, unordered_map<long, int> &prefix)
     {
-        vector<vector<pii>> graph(n);
-        for (auto &e : times)
-        {
-            graph[e[0] - 1].emplace_back(e[1] - 1, e[2]);
-        }
-        vector<int> dis(n, INT_MAX);
-        priority_queue<pii, vector<pii>, greater<pii>> pq;
-        dis[k - 1] = 0;
-        pq.emplace(0, k - 1);
-        while (!pq.empty())
-        {
-            auto [dx, x] = pq.top();
-            pq.pop();
-            if (dx > dis[x])
-            {
-                continue;
-            }
-            for (auto &[y, dy] : graph[x])
-            {
-                int new_dis = dx + dy;
-                if (new_dis < dis[y])
-                {
-                    dis[y] = new_dis;
-                    pq.emplace(new_dis, y);
-                }
-            }
-        }
-        int ans = *max_element(dis.begin(), dis.end());
-        return ans == INT_MAX ? -1 : ans;
+        if (root == nullptr)
+            return;
+        cur += root->val;
+        cnt += prefix[cur - targetSum];
+        prefix[cur] += 1;
+        dfs(root->left, cur, targetSum, prefix);
+        dfs(root->right, cur, targetSum, prefix);
+        prefix[cur] -= 1;
+    }
+
+    int pathSum(TreeNode *root, int targetSum)
+    {
+        if (root == nullptr)
+            return 0;
+        unordered_map<long, int> prefix;
+        prefix[0l] = 1;
+        dfs(root, 0, targetSum, prefix);
+        return cnt;
     }
 };
