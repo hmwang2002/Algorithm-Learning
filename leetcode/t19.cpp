@@ -14,27 +14,35 @@ auto _{
 class Solution
 {
 public:
-    int cnt = 0;
-
-    void dfs(TreeNode *root, long cur, int targetSum, unordered_map<long, int> &prefix)
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
     {
-        if (root == nullptr)
-            return;
-        cur += root->val;
-        cnt += prefix[cur - targetSum];
-        prefix[cur] += 1;
-        dfs(root->left, cur, targetSum, prefix);
-        dfs(root->right, cur, targetSum, prefix);
-        prefix[cur] -= 1;
-    }
-
-    int pathSum(TreeNode *root, int targetSum)
-    {
-        if (root == nullptr)
-            return 0;
-        unordered_map<long, int> prefix;
-        prefix[0l] = 1;
-        dfs(root, 0, targetSum, prefix);
-        return cnt;
+        ListNode *p1 = l1;
+        ListNode *p2 = l2;
+        ListNode *dummy = new ListNode();
+        ListNode *res = dummy;
+        int add = 0;
+        while (p1 || p2)
+        {
+            int v1 = p1 == nullptr ? 0 : p1->val;
+            int v2 = p2 == nullptr ? 0 : p2->val;
+            int sum = v1 + v2 + add;
+            add = sum / 10;
+            sum = sum % 10;
+            res->next = new ListNode(sum);
+            res = res->next;
+            if (p1)
+            {
+                p1 = p1->next;
+            }
+            if (p2)
+            {
+                p2 = p2->next;
+            }
+        }
+        if (add > 0)
+        {
+            res->next = new ListNode(add);
+        }
+        return dummy->next;
     }
 };
