@@ -14,35 +14,23 @@ auto _{
 class Solution
 {
 public:
-    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
+    int firstMissingPositive(vector<int> &nums)
     {
-        ListNode *p1 = l1;
-        ListNode *p2 = l2;
-        ListNode *dummy = new ListNode();
-        ListNode *res = dummy;
-        int add = 0;
-        while (p1 || p2)
+        int n = nums.size();
+        for (int i = 0; i < n; i++)
         {
-            int v1 = p1 == nullptr ? 0 : p1->val;
-            int v2 = p2 == nullptr ? 0 : p2->val;
-            int sum = v1 + v2 + add;
-            add = sum / 10;
-            sum = sum % 10;
-            res->next = new ListNode(sum);
-            res = res->next;
-            if (p1)
+            while (nums[i] > 0 && nums[i] <= n && nums[i] != nums[nums[i] - 1])
             {
-                p1 = p1->next;
-            }
-            if (p2)
-            {
-                p2 = p2->next;
+                swap(nums[i], nums[nums[i] - 1]);
             }
         }
-        if (add > 0)
+        for (int i = 0; i < n; i++)
         {
-            res->next = new ListNode(add);
+            if (i + 1 != nums[i])
+            {
+                return i + 1;
+            }
         }
-        return dummy->next;
+        return n + 1;
     }
 };
