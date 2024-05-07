@@ -14,23 +14,20 @@ auto _{
 class Solution
 {
 public:
-    int firstMissingPositive(vector<int> &nums)
+    ListNode *swapPairs(ListNode *head)
     {
-        int n = nums.size();
-        for (int i = 0; i < n; i++)
+        ListNode *dummy = new ListNode(-1, head);
+        ListNode *fast = head, *p = dummy;
+        while (fast != nullptr && fast->next != nullptr)
         {
-            while (nums[i] > 0 && nums[i] <= n && nums[i] != nums[nums[i] - 1])
-            {
-                swap(nums[i], nums[nums[i] - 1]);
-            }
+            ListNode *tmp = fast;
+            fast = fast->next;
+            tmp->next = fast->next;
+            p->next = fast;
+            fast->next = tmp;
+            p = tmp;
+            fast = tmp->next;
         }
-        for (int i = 0; i < n; i++)
-        {
-            if (i + 1 != nums[i])
-            {
-                return i + 1;
-            }
-        }
-        return n + 1;
+        return dummy->next;
     }
 };
