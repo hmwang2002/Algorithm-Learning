@@ -14,20 +14,17 @@ auto _{
 class Solution
 {
 public:
-    ListNode *swapPairs(ListNode *head)
+    int coinChange(vector<int> &coins, int amount)
     {
-        ListNode *dummy = new ListNode(-1, head);
-        ListNode *fast = head, *p = dummy;
-        while (fast != nullptr && fast->next != nullptr)
+        vector<int> dp(amount + 1, 0x3f3f3f3f);
+        dp[0] = 0;
+        for (auto &x : coins)
         {
-            ListNode *tmp = fast;
-            fast = fast->next;
-            tmp->next = fast->next;
-            p->next = fast;
-            fast->next = tmp;
-            p = tmp;
-            fast = tmp->next;
+            for (int i = x; i <= amount; i++)
+            {
+                dp[i] = min(dp[i], dp[i - x] + 1);
+            }
         }
-        return dummy->next;
+        return dp[amount] == 0x3f3f3f3f ? -1 : dp[amount];
     }
 };
