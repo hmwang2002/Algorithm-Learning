@@ -3,28 +3,37 @@
 
 using namespace std;
 
-auto _{
-    []() noexcept
-    {
-        std::ios::sync_with_stdio(false);
-        std::cin.tie(nullptr), std::cout.tie(nullptr);
-        return 0;
-    }()};
-
 class Solution
 {
 public:
-    int coinChange(vector<int> &coins, int amount)
+    int networkDelayTime(vector<vector<int>> &times, int n, int k)
     {
-        vector<int> dp(amount + 1, 0x3f3f3f3f);
-        dp[0] = 0;
-        for (auto &x : coins)
+        vector<vector<pair<int, int>>> g(n);
+        for (auto &t : times)
         {
-            for (int i = x; i <= amount; i++)
+            g[t[0] - 1].emplace_back(t[1] - 1, t[2]);
+        }
+        vector<int> dis(n, INT_MAX);
+        dis[k - 1] = 0;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        pq.emplace(0, k - 1);
+        while (!pq.empty())
+        {
+            auto [dx, x] = pq.top();
+            pq.pop();
+            if (dx > dis[x])
+                continue;
+            for (auto &[y, dy] : g[x])
             {
-                dp[i] = min(dp[i], dp[i - x] + 1);
+                int new_dis = dx + dy;
+                if (new_dis < dis[y])
+                {
+                    dis[y] = new_dis;
+                    pq.emplace(new_dis, y);
+                }
             }
         }
-        return dp[amount] == 0x3f3f3f3f ? -1 : dp[amount];
+        int res = *max_element(dis.begin(), dis.end());
+        return res == INT_MAX ? -1 : res;
     }
 };
