@@ -6,34 +6,43 @@ using namespace std;
 class Solution
 {
 public:
-    int networkDelayTime(vector<vector<int>> &times, int n, int k)
+    vector<vector<string>> res;
+    unordered_set<int> cols, diag1, diag2;
+
+    void backtrace(vector<string> &chess, int row, int n)
     {
-        vector<vector<pair<int, int>>> g(n);
-        for (auto &t : times)
+        if (row == n)
         {
-            g[t[0] - 1].emplace_back(t[1] - 1, t[2]);
+            res.push_back(chess);
+            return;
         }
-        vector<int> dis(n, INT_MAX);
-        dis[k - 1] = 0;
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-        pq.emplace(0, k - 1);
-        while (!pq.empty())
+        for (int i = 0; i < n; i++)
         {
-            auto [dx, x] = pq.top();
-            pq.pop();
-            if (dx > dis[x])
-                continue;
-            for (auto &[y, dy] : g[x])
+            int d1 = row + i, d2 = row - i;
+            if (check(i, d1, d2))
             {
-                int new_dis = dx + dy;
-                if (new_dis < dis[y])
-                {
-                    dis[y] = new_dis;
-                    pq.emplace(new_dis, y);
-                }
+                cols.insert(i), diag1.insert(d1), diag2.insert(d2);
+                chess[row][i] = 'Q';
+                backtrace(chess, row + 1, n);
+                chess[row][i] = '.';
+                cols.erase(i), diag1.erase(d1), diag2.erase(d2);
             }
         }
-        int res = *max_element(dis.begin(), dis.end());
-        return res == INT_MAX ? -1 : res;
+    }
+
+    bool check(int col, int d1, int d2)
+    {
+        if (cols.count(col) || diag1.count(d1) || diag2.count(d2))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    vector<vector<string>> solveNQueens(int n)
+    {
+        vector<string> chess(n, string(n, '.'));
+        backtrace(chess, 0, n);
+        return res;
     }
 };
