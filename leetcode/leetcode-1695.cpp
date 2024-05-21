@@ -2,32 +2,25 @@
 
 using namespace std;
 
-auto _{
-    []() noexcept
-    {
-        std::ios::sync_with_stdio(false);
-        std::cin.tie(nullptr), std::cout.tie(nullptr);
-        return 0;
-    }()};
-
 class Solution
 {
 public:
-    vector<int> getSumAbsoluteDifferences(vector<int> &nums)
+    int maximumUniqueSubarray(vector<int> &nums)
     {
-        int n = nums.size();
-        vector<int> pre(n + 1);
-        for (int i = 0; i < n; i++)
+        unordered_set<int> se;
+        int res = 0, cur = 0, l = 0;
+        for (int i = 0; i < nums.size(); i++)
         {
-            pre[i + 1] = pre[i] + nums[i];
+            cur += nums[i];
+            while (se.count(nums[i]))
+            {
+                cur -= nums[l];
+                se.erase(nums[l]);
+                l++;
+            }
+            se.insert(nums[i]);
+            res = max(res, cur);
         }
-        vector<int> result(n);
-        for (int i = 0; i < n; i++)
-        {
-            int left = i * nums[i] - pre[i];
-            int right = pre[n] - pre[i] - nums[i] * (n - i);
-            result[i] = left + right;
-        }
-        return result;
+        return res;
     }
 };
