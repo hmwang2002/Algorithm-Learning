@@ -36,6 +36,7 @@ int main()
         while (mid != -1)
         {
             mp[mid] = 0;
+            m--;
             for (int i = mid - 1; i >= 0; i--)
             {
                 if (mp[i] > 0)
@@ -54,12 +55,6 @@ int main()
             }
             mid = check(mp);
         }
-        int cnt = 0;
-        for (int i = 0; i < c; i++)
-        {
-            if (mp[i] > 0)
-                cnt++;
-        }
-        cout << cnt << endl;
+        cout << m << endl;
     }
 }
