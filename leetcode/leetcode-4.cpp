@@ -62,7 +62,7 @@ public:
         {
             return findMedianSortedArrays(nums2, nums1);
         }
-        int LMax1, LMax2, RMin1, RMin2, c1, c2, lo = 0, hi = 2 * n;
+        int LMax1, LMax2, RMin1, RMin2, c1, c2, lo = 0, hi = 2 * n; // 我们目前是虚拟加了'#'所以数组1是2*n + 1的长度
         while (lo <= hi)
         {
             c1 = (lo + hi) / 2;
