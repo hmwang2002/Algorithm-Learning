@@ -1,17 +1,39 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+typedef long long ll;
 
 int c, m, n;
+unordered_map<int, int> h;
+set<int> s;
+priority_queue<int, vector<int>, greater<int>> pq;
 
-int check(vector<int> &mp)
+void bfs()
 {
-    for (int i = 0; i < c; i++)
+    while (!pq.empty())
     {
-        if (mp[i] >= 5)
-            return i;
+        int t = pq.top();
+        pq.pop();
+        if (h[t] >= 5)
+        {
+            h[t] = 0;
+            set<int>::iterator i;
+            i = s.find(t);
+            set<int>::iterator i1 = i;
+            if (i1 != s.begin())
+            {
+                i1--;
+                h[*i1]++;
+                pq.push(*i1);
+            }
+            if (++i != s.end())
+            {
+                h[*i]++;
+                pq.push(*i);
+            }
+            s.erase(t);
+        }
     }
-    return -1;
 }
 
 int main()
@@ -19,42 +41,21 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(0), cout.tie(0);
     cin >> c >> m >> n;
-    vector<int> mp(c);
     for (int i = 0; i < m; i++)
     {
         int x, w;
         cin >> x >> w;
-        mp[x - 1] = w;
+        h[x] = w;
+        s.insert(x);
     }
+
     while (n--)
     {
-        int p;
-        cin >> p;
-        p -= 1;
-        mp[p]++;
-        int mid = check(mp);
-        while (mid != -1)
-        {
-            mp[mid] = 0;
-            m--;
-            for (int i = mid - 1; i >= 0; i--)
-            {
-                if (mp[i] > 0)
-                {
-                    mp[i]++;
-                    break;
-                }
-            }
-            for (int i = mid + 1; i < c; i++)
-            {
-                if (mp[i] > 0)
-                {
-                    mp[i]++;
-                    break;
-                }
-            }
-            mid = check(mp);
-        }
-        cout << m << endl;
+        int op;
+        cin >> op;
+        h[op] += 1;
+        pq.push(op);
+        bfs();
+        cout << s.size() << endl;
     }
 }
