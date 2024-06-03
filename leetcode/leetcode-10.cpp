@@ -22,8 +22,10 @@ public:
 
         vector<vector<int>> f(m + 1, vector<int>(n + 1));
         f[0][0] = true;
+        // s需要从长度0开始匹配是对应p = "a*"这种情况，即长度为0也能匹配
         for (int i = 0; i <= m; i++)
         {
+            // p一定需要有长度，从1开始
             for (int j = 1; j <= n; j++)
             {
                 if (p[j - 1] == '*')

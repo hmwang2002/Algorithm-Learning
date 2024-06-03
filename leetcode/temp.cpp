@@ -6,16 +6,20 @@ using namespace std;
 class Solution
 {
 public:
-    bool isPalindrome(int x)
+    string longestCommonPrefix(vector<string> &strs)
     {
-        if (x < 0 || (x != 0 && x % 10 == 0))
-            return false;
-        int rev = 0;
-        while (x > rev)
+        string res;
+        for (int i = 0; i < strs[0].size(); i++)
         {
-            rev = rev * 10 + x % 10;
-            x /= 10;
+            for (int j = 1; j < strs.size(); j++)
+            {
+                if (i >= strs[j].size() || strs[j][i] != strs[0][i])
+                {
+                    return res;
+                }
+            }
+            res += strs[0][i];
         }
-        return rev == x || rev / 10 == x;
+        return res;
     }
 };
