@@ -6,20 +6,26 @@ using namespace std;
 class Solution
 {
 public:
-    string longestCommonPrefix(vector<string> &strs)
+    bool isValid(string s)
     {
-        string res;
-        for (int i = 0; i < strs[0].size(); i++)
+        stack<char> stk;
+        for (char c : s)
         {
-            for (int j = 1; j < strs.size(); j++)
+            if (c == '(' || c == '[' || c == '{')
+                stk.push(c);
+            else
             {
-                if (i >= strs[j].size() || strs[j][i] != strs[0][i])
-                {
-                    return res;
-                }
+                if (stk.empty())
+                    return false;
+                if (c == ')' && stk.top() != '(')
+                    return false;
+                if (c == ']' && stk.top() != '[')
+                    return false;
+                if (c == '}' && stk.top() != '{')
+                    return false;
+                stk.pop();
             }
-            res += strs[0][i];
         }
-        return res;
+        return stk.empty();
     }
 };
