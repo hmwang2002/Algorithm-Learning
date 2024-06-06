@@ -6,26 +6,15 @@ using namespace std;
 class Solution
 {
 public:
-    bool isValid(string s)
+    int removeElement(vector<int> &nums, int val)
     {
-        stack<char> stk;
-        for (char c : s)
+        int index = 0;
+        for (int i = 0; i < nums.size(); i++)
         {
-            if (c == '(' || c == '[' || c == '{')
-                stk.push(c);
-            else
-            {
-                if (stk.empty())
-                    return false;
-                if (c == ')' && stk.top() != '(')
-                    return false;
-                if (c == ']' && stk.top() != '[')
-                    return false;
-                if (c == '}' && stk.top() != '{')
-                    return false;
-                stk.pop();
-            }
+            if (nums[i] == val)
+                continue;
+            nums[index++] = nums[i];
         }
-        return stk.empty();
+        return index;
     }
 };
