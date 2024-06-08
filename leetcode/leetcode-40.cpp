@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include "datastructure.h"
 
 using namespace std;
 
@@ -21,6 +20,10 @@ class Solution
         }
         for (int i = index; i < candidates.size(); i++)
         {
+            if (i > index && candidates[i] == candidates[i - 1])
+            {
+                continue;
+            }
             v.push_back(candidates[i]);
             backtrace(candidates, target, i + 1, sum + candidates[i]);
             v.pop_back();
