@@ -6,22 +6,23 @@ using namespace std;
 class Solution
 {
 public:
-    int jump(vector<int> &nums)
+    double quickMul(double x, long n)
     {
-        int cnt = 0, end = 0, maxPos = 0;
-        for (int i = 0; i < nums.size(); i++)
+        if (n == 1)
         {
-            maxPos = max(maxPos, i + nums[i]);
-            if (i == end)
-            {
-                end = maxPos;
-                cnt++;
-            }
-            if (end >= nums.size() - 1)
-            {
-                return cnt;
-            }
+            return x;
         }
-        return cnt;
+        if (n % 2)
+        {
+            return quickMul(x * x, n / 2) * x;
+        }
+        return quickMul(x * x, n / 2);
+    }
+
+    double myPow(double x, int n)
+    {
+        if (n == 0)
+            return 1.0;
+        return n > 0 ? quickMul(x, n) : 1 / quickMul(x, -(long)n);
     }
 };
