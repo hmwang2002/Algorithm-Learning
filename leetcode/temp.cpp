@@ -3,26 +3,20 @@
 
 using namespace std;
 
-class Solution
+int climb(int n)
 {
-public:
-    double quickMul(double x, long n)
+    int pre = 1, cur = 1;
+    for (int i = 2; i <= n; i++)
     {
-        if (n == 1)
-        {
-            return x;
-        }
-        if (n % 2)
-        {
-            return quickMul(x * x, n / 2) * x;
-        }
-        return quickMul(x * x, n / 2);
+        int temp = pre + cur;
+        pre = cur;
+        cur = temp;
     }
+    return cur;
+}
 
-    double myPow(double x, int n)
-    {
-        if (n == 0)
-            return 1.0;
-        return n > 0 ? quickMul(x, n) : 1 / quickMul(x, -(long)n);
-    }
-};
+int main()
+{
+    int res = climb(4);
+    cout << res << endl;
+}
