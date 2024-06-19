@@ -3,20 +3,42 @@
 
 using namespace std;
 
-int climb(int n)
+class Solution
 {
-    int pre = 1, cur = 1;
-    for (int i = 2; i <= n; i++)
+public:
+    vector<vector<int>> threeSum(vector<int> &nums)
     {
-        int temp = pre + cur;
-        pre = cur;
-        cur = temp;
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> res;
+        for (int i = 0; i < nums.size() - 2; i++)
+        {
+            if (i > 0 && nums[i] == nums[i - 1])
+            {
+                continue;
+            }
+            int target = -nums[i];
+            int l = i + 1, r = nums.size() - 1;
+            while (l < r)
+            {
+                int cur = nums[l] + nums[r];
+                if (cur == target)
+                {
+                    res.push_back({nums[i], nums[l], nums[r]});
+                    do
+                    {
+                        l++;
+                    } while (l < r && nums[l] == nums[l - 1]);
+                }
+                else if (cur < target)
+                {
+                    l++;
+                }
+                else
+                {
+                    r--;
+                }
+            }
+        }
+        return res;
     }
-    return cur;
-}
-
-int main()
-{
-    int res = climb(4);
-    cout << res << endl;
-}
+};
