@@ -6,39 +6,37 @@ using namespace std;
 class Solution
 {
 public:
-    vector<vector<int>> threeSum(vector<int> &nums)
+    int strStr(string haystack, string needle)
     {
-        sort(nums.begin(), nums.end());
-        vector<vector<int>> res;
-        for (int i = 0; i < nums.size() - 2; i++)
+        int n = haystack.size(), m = needle.size();
+        vector<int> ne(m);
+        for (int i = 1, j = 0; i < m; i++)
         {
-            if (i > 0 && nums[i] == nums[i - 1])
+            while (j > 0 && needle[i] != needle[j])
             {
-                continue;
+                j = ne[j - 1];
             }
-            int target = -nums[i];
-            int l = i + 1, r = nums.size() - 1;
-            while (l < r)
+            if (needle[i] == needle[j])
             {
-                int cur = nums[l] + nums[r];
-                if (cur == target)
-                {
-                    res.push_back({nums[i], nums[l], nums[r]});
-                    do
-                    {
-                        l++;
-                    } while (l < r && nums[l] == nums[l - 1]);
-                }
-                else if (cur < target)
-                {
-                    l++;
-                }
-                else
-                {
-                    r--;
-                }
+                j++;
+            }
+            ne[i] = j;
+        }
+        for (int i = 0, j = 0; i < n; i++)
+        {
+            while (j > 0 && haystack[i] != needle[j])
+            {
+                j = ne[j - 1];
+            }
+            if (haystack[i] == needle[j])
+            {
+                j++;
+            }
+            if (j == m)
+            {
+                return i - m + 1;
             }
         }
-        return res;
+        return -1;
     }
 };
