@@ -5,22 +5,19 @@ using namespace std;
 class Solution
 {
 public:
-    bool wordBreak(string s, vector<string> &wordDict)
+    bool canConstruct(string ransomNote, string magazine)
     {
-        unordered_set<string> dict = unordered_set<string>(wordDict.begin(), wordDict.end());
-        vector<bool> dp(s.size() + 1);
-        dp[0] = true;
-        for (int i = 1; i <= s.size(); i++)
+        unordered_map<char, int> cnt;
+        for (char c : magazine)
         {
-            for (int j = 0; j < i; j++)
-            {
-                if (dp[j] && dict.count(s.substr(j, i - j)))
-                {
-                    dp[i] = true;
-                    break;
-                }
-            }
+            cnt[c]++;
         }
-        return dp[s.size()];
+        for (char c : ransomNote)
+        {
+            cnt[c]--;
+            if (cnt[c] < 0)
+                return false;
+        }
+        return true;
     }
 };
