@@ -2,22 +2,41 @@
 
 using namespace std;
 
+using pii = pair<int, int>;
+
 class Solution
 {
 public:
-    bool canConstruct(string ransomNote, string magazine)
+    int networkDelayTime(vector<vector<int>> &times, int n, int k)
     {
-        unordered_map<char, int> cnt;
-        for (char c : magazine)
+        vector<vector<pii>> edges(n);
+        vector<int> dis(n, 0x3f3f3f3f);
+        for (auto &e : times)
         {
-            cnt[c]++;
+            edges[e[0] - 1].emplace_back(e[1] - 1, e[2]);
         }
-        for (char c : ransomNote)
+        priority_queue<pii, vector<pii>, less<pii>> pq;
+        pq.emplace(0, k - 1);
+        dis[k - 1] = 0;
+        while (!pq.empty())
         {
-            cnt[c]--;
-            if (cnt[c] < 0)
-                return false;
+            auto [dx, x] = pq.top();
+            pq.pop();
+            if (dis[x] < dx)
+            {
+                continue;
+            }
+            for (auto &[y, dy] : edges[x])
+            {
+                int new_dis = dx + dy;
+                if (new_dis < dis[y])
+                {
+                    dis[y] = new_dis;
+                    pq.emplace(new_dis, y);
+                }
+            }
         }
-        return true;
+        int res = *max_element(dis.begin(), dis.end());
+        return res != 0x3f3f3f3f ? res : -1;
     }
 };
