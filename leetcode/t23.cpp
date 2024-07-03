@@ -4,39 +4,28 @@ using namespace std;
 
 using pii = pair<int, int>;
 
+auto _{
+    []() noexcept
+    {
+        std::ios::sync_with_stdio(false);
+        std::cin.tie(0), std::cout.tie(0);
+    }};
+
 class Solution
 {
 public:
-    int networkDelayTime(vector<vector<int>> &times, int n, int k)
+    int lengthOfLongestSubsequence(vector<int> &nums, int target)
     {
-        vector<vector<pii>> edges(n);
-        vector<int> dis(n, 0x3f3f3f3f);
-        for (auto &e : times)
+        int n = nums.size();
+        vector<int> f(target + 1, INT_MIN);
+        f[0] = 0;
+        for (int i = 0; i < n; i++)
         {
-            edges[e[0] - 1].emplace_back(e[1] - 1, e[2]);
-        }
-        priority_queue<pii, vector<pii>, less<pii>> pq;
-        pq.emplace(0, k - 1);
-        dis[k - 1] = 0;
-        while (!pq.empty())
-        {
-            auto [dx, x] = pq.top();
-            pq.pop();
-            if (dis[x] < dx)
+            for (int j = target; j >= nums[i]; j--)
             {
-                continue;
-            }
-            for (auto &[y, dy] : edges[x])
-            {
-                int new_dis = dx + dy;
-                if (new_dis < dis[y])
-                {
-                    dis[y] = new_dis;
-                    pq.emplace(new_dis, y);
-                }
+                f[j] = max(f[j], f[j - nums[i]] + 1);
             }
         }
-        int res = *max_element(dis.begin(), dis.end());
-        return res != 0x3f3f3f3f ? res : -1;
+        return f[target] <= 0 ? -1 : f[target];
     }
 };
